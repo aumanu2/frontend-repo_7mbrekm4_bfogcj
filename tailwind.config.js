@@ -1,9 +1,22 @@
 /** @type {import('tailwindcss').Config} */
+import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
+
+function addVariablesForColors({ addBase, theme }) {
+  const allColors = flattenColorPalette(theme('colors'))
+  const newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  )
+  addBase({
+    ':root': newVars,
+  })
+}
+
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       fontFamily: {
@@ -21,6 +34,7 @@ export default {
         'slide-up': 'slideUp 0.3s ease-out',
         'bounce-in': 'bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
         'spin-slow': 'spin 3s linear infinite',
+        aurora: 'aurora 60s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -45,8 +59,12 @@ export default {
           '70%': { transform: 'scale(0.9)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
         },
+        aurora: {
+          from: { backgroundPosition: '50% 50%, 50% 50%' },
+          to: { backgroundPosition: '350% 50%, 350% 50%' },
+        },
       },
     },
   },
-  plugins: [],
+  plugins: [addVariablesForColors],
 }
